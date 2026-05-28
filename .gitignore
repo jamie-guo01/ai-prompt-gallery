@@ -1,0 +1,10 @@
+node_modules/
+.DS_Store
+*.db-shm
+*.db-wal
+prompt-hub/
+scraper/
+models/
+data/
+*.png
+gallery.db
