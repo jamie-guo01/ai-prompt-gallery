@@ -64,8 +64,21 @@ function playHomeIntro() {
 // ============ Data Loading ============
 async function loadData() {
     try {
-        const res = await fetch('/api/all?limit=20');
-        categoriesData = await res.json();
+        // Try static JSON first (for Netlify), fallback to API (for local dev)
+        let data;
+        try {
+            const res = await fetch('/data.json');
+            if (res.ok) {
+                data = await res.json();
+            } else {
+                throw new Error('no static data');
+            }
+        } catch (e) {
+            const res = await fetch('/api/all?limit=200');
+            data = await res.json();
+        }
+
+        categoriesData = data;
 
         // Build flat allItems
         allItems = [];
@@ -257,37 +270,8 @@ async function renderCategoryGrid() {
     const sub = cat ? cat.subcategories.find(s => s.id === currentSubId) : null;
     const existingItems = sub ? sub.items : [];
 
-    // Render what we have
+    // Render all items from cached data (static JSON has all items)
     renderGridItems(grid, existingItems);
-
-    // Load all items for this subcategory
-    try {
-        const res = await fetch(`/api/subcategories/${currentSubId}/items?limit=200&offset=0`);
-        const data = await res.json();
-        if (data.items && data.items.length > 0) {
-            // Update cache
-            if (sub) {
-                sub.items = data.items.map(item => ({
-                    ...item,
-                    tags: item.tags || []
-                }));
-                // Update allItems
-                data.items.forEach(item => {
-                    if (!allItems.find(a => a.id === item.id)) {
-                        allItems.push({
-                            ...item,
-                            imageUrl: item.image_url || '',
-                            category: cat.name,
-                            subcategory: sub.name
-                        });
-                    }
-                });
-            }
-            renderGridItems(grid, data.items);
-        }
-    } catch (e) {
-        console.error('加载分类数据失败:', e);
-    }
 }
 
 function renderGridItems(grid, items) {
@@ -396,50 +380,46 @@ function setupSearch() {
         }
 
         clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(async () => {
-            try {
-                const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=20`);
-                const data = await res.json();
-                const matches = data.items || [];
+        searchTimeout = setTimeout(() => {
+            const lowerQuery = query.toLowerCase();
+            const matches = allItems.filter(item => {
+                const title = (item.title || '').toLowerCase();
+                const prompt = (item.prompt || '').toLowerCase();
+                const tags = (item.tags || []).join(' ').toLowerCase();
+                return title.includes(lowerQuery) || prompt.includes(lowerQuery) || tags.includes(lowerQuery);
+            }).slice(0, 20);
 
-                if (matches.length === 0) {
-                    results.innerHTML = '<div class="search-hint">未找到相关结果</div>';
-                    return;
-                }
-
-                let html = '';
-                if (data.total) {
-                    html += `<div class="search-result-count">找到 ${data.total} 个结果</div>`;
-                }
-
-                matches.forEach(item => {
-                    html += `
-                        <div class="search-result-item" data-item-id="${item.id}">
-                            <div class="search-result-thumb">
-                                <img src="${getImageUrl(item.image_url)}" alt="">
-                            </div>
-                            <div class="search-result-info">
-                                <div class="search-result-title">${item.title || '无标题'}</div>
-                                <div class="search-result-meta">${item.category_name || ''} · ${item.subcategory_name || ''}</div>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                results.innerHTML = html;
-
-                results.querySelectorAll('.search-result-item').forEach(el => {
-                    el.addEventListener('click', () => {
-                        const itemId = parseInt(el.dataset.itemId);
-                        overlay.classList.remove('active');
-                        openDetail(itemId);
-                    });
-                });
-            } catch (err) {
-                console.error('搜索失败:', err);
-                results.innerHTML = '<div class="search-hint">搜索出错，请重试</div>';
+            if (matches.length === 0) {
+                results.innerHTML = '<div class="search-hint">未找到相关结果</div>';
+                return;
             }
-        }, 300);
+
+            let html = `<div class="search-result-count">找到 ${matches.length} 个结果</div>`;
+
+            matches.forEach(item => {
+                html += `
+                    <div class="search-result-item" data-item-id="${item.id}">
+                        <div class="search-result-thumb">
+                            <img src="${getImageUrl(item.image_url || item.imageUrl)}" alt="">
+                        </div>
+                        <div class="search-result-info">
+                            <div class="search-result-title">${item.title || '无标题'}</div>
+                            <div class="search-result-meta">${item.category || ''} · ${item.subcategory || ''}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            results.innerHTML = html;
+
+            results.querySelectorAll('.search-result-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const itemId = parseInt(el.dataset.itemId);
+                    overlay.classList.remove('active');
+                    openDetail(itemId);
+                });
+            });
+        }, 200);
     });
 }
 
@@ -475,22 +455,9 @@ function setupDetail() {
 }
 
 function openDetail(itemId) {
-    let foundItem = allItems.find(item => item.id === itemId);
-
+    const foundItem = allItems.find(item => item.id === itemId);
     if (foundItem) {
         showDetailModal(foundItem);
-    } else {
-        fetch(`/api/items/${itemId}`)
-            .then(res => res.json())
-            .then(item => {
-                showDetailModal({
-                    ...item,
-                    imageUrl: item.image_url || '',
-                    category: item.category_name || '',
-                    subcategory: item.subcategory_name || ''
-                });
-            })
-            .catch(err => console.error('获取详情失败:', err));
     }
 }
 
