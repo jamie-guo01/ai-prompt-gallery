@@ -1,7 +1,13 @@
 [build]
   publish = "."
+  command = "echo 'Static site, no build needed'"
+  ignore = "false"
+
+[build.environment]
+  NPM_FLAGS = "--no-optional"
+  NODE_VERSION = "20"
 
 [[headers]]
   for = "/data.json"
   [headers.values]
-    Cache-Control = "public, max-age=3600"
+    Cache-Control = "public, max-age=60"
