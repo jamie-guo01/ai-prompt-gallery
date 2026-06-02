@@ -703,6 +703,105 @@ body {
     color: white;
 }
 
+/* ============ CONTACT MODAL ============ */
+.contact-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.contact-modal.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.contact-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.contact-content {
+    position: relative;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+    min-width: 300px;
+}
+
+.contact-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.contact-close:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.contact-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.contact-wechat {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.contact-wechat span {
+    color: var(--text-primary);
+    font-weight: 600;
+    user-select: all;
+}
+
+.contact-copy-btn {
+    padding: 0.625rem 1.5rem;
+    background: var(--text-primary);
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.contact-copy-btn:hover {
+    opacity: 0.9;
+}
+
+.contact-copy-btn.copied {
+    background: #22c55e;
+    color: white;
+}
+
 /* ============ CURSOR FOLLOWER ============ */
 .cursor-follower {
     position: fixed;

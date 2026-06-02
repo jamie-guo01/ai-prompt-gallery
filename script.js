@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadData();
     setupSearch();
     setupDetail();
+    setupContact();
     setupCursorFollower();
     setupTrailEffect();
     playIntroAnimation();
@@ -448,6 +449,44 @@ function setupDetail() {
                 setTimeout(() => {
                     copyBtn.classList.remove('copied');
                     copyBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> 复制提示词`;
+                }, 2000);
+            });
+        });
+    }
+}
+
+// ============ Contact Modal ============
+function setupContact() {
+    const modal = document.getElementById('contactModal');
+    const btn = document.getElementById('contactBtn');
+    const closeBtn = document.getElementById('contactClose');
+    const backdrop = modal ? modal.querySelector('.contact-backdrop') : null;
+    const copyBtn = document.getElementById('contactCopyBtn');
+
+    if (!modal || !btn) return;
+
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        modal.classList.add('active');
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+    if (backdrop) backdrop.addEventListener('click', () => modal.classList.remove('active'));
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            modal.classList.remove('active');
+        }
+    });
+
+    if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText('jianjianshuile').then(() => {
+                copyBtn.classList.add('copied');
+                copyBtn.textContent = '已复制';
+                setTimeout(() => {
+                    copyBtn.classList.remove('copied');
+                    copyBtn.textContent = '复制微信号';
                 }, 2000);
             });
         });

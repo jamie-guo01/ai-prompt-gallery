@@ -27,9 +27,20 @@
                     <path d="m21 21-4.3-4.3"/>
                 </svg>
             </button>
-            <a class="topbar-link" href="#">联系作者</a>
+            <button class="topbar-link" id="contactBtn" type="button">联系作者</button>
         </div>
     </header>
+
+    <!-- Contact Modal -->
+    <div class="contact-modal" id="contactModal">
+        <div class="contact-backdrop"></div>
+        <div class="contact-content">
+            <button class="contact-close" id="contactClose">✕</button>
+            <h3 class="contact-title">联系作者</h3>
+            <p class="contact-wechat">微信号：<span>jianjianshuile</span></p>
+            <button class="contact-copy-btn" id="contactCopyBtn">复制微信号</button>
+        </div>
+    </div>
 
     <!-- Layout: sidebar + main -->
     <div class="layout" id="layout" data-view="home">
