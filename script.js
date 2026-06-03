@@ -171,7 +171,7 @@ function renderHome() {
     let html = `
         <section class="home-hero">
             <h1>给互联网设计师的 AI 图片提示词灵感库</h1>
-            <p>已收录 ${totalCount}+ 张图片，覆盖 APP、运营、海报等设计场景，每张图都可直接复制的 AI 提示词，让灵感随取随用</p>
+            <p>已收录 ${totalCount}+ 张，覆盖 APP、运营、海报等设计场景，每张图都可直接复制的 AI 提示词，让灵感随取随用</p>
         </section>
         <div class="home-sections">
     `;
