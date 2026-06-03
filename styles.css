@@ -282,7 +282,7 @@ body {
 }
 
 .home-section {
-    visibility: hidden;
+    /* visibility managed by GSAP animation in script.js */
 }
 
 .home-section-head {
