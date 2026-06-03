@@ -65,10 +65,10 @@ function playHomeIntro() {
 // ============ Data Loading ============
 async function loadData() {
     try {
-        // Try static JSON first (for Netlify), fallback to API (for local dev)
+        // Try static JSON first, fallback to API (for local dev)
         let data;
         try {
-            const res = await fetch('/data.json');
+            const res = await fetch('data.json');
             if (res.ok) {
                 data = await res.json();
             } else {
