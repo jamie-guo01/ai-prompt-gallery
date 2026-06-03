@@ -2,3 +2,10 @@ node_modules/
 .DS_Store
 *.db-shm
 *.db-wal
+
+# Local Netlify folder
+.netlify
+
+# 爬虫临时文件
+scripts/.auth/
+scripts/raw-data-*.json
