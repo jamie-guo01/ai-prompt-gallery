@@ -263,7 +263,6 @@ body {
     color: var(--text-primary);
     position: relative;
     z-index: 3;
-    visibility: hidden;
 }
 
 .home-hero p {
@@ -272,7 +271,6 @@ body {
     line-height: 1.8;
     position: relative;
     z-index: 3;
-    visibility: hidden;
 }
 
 .home-sections {
