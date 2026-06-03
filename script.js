@@ -177,8 +177,8 @@ function renderHome() {
 
     // Define homepage display order (only these subcategories shown on home)
     const homeSubOrder = [
-        '3D海报', 'KV海报', 'Banner', '弹窗', '字体设计',
-        'App图标', '空状态', '引导页', '拼贴海报', '渐变艺术',
+        '3D海报', 'KV海报', '字体设计', 'App图标', '空状态',
+        'Banner', '弹窗', '引导页', '拼贴海报', '渐变艺术',
         '科技海报', '电影海报', '艺术海报', '复古海报', '多巴胺',
         '黏土', '夸张', '扁平', '卡通IP', '吉祥物'
     ];
