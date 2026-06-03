@@ -41,34 +41,22 @@ function playHomeIntro() {
     const p = hero.querySelector('p');
     const sections = document.querySelectorAll('.home-section');
 
-    // Use gsap.fromTo to ensure elements always end up visible,
-    // even if animation is interrupted
+    // Only animate position (y) and opacity, never hide with visibility
+    // This prevents content from being permanently hidden if animation fails
     gsap.timeline({ defaults: { ease: 'power4.out' } })
-        .fromTo(h1, {
+        .from(h1, {
             y: 40,
-            autoAlpha: 0,
-            filter: 'blur(10px)',
-        }, {
-            y: 0,
-            autoAlpha: 1,
-            filter: 'blur(0px)',
+            opacity: 0,
             duration: 1,
-            clearProps: 'filter',
         })
-        .fromTo(p, {
+        .from(p, {
             y: 30,
-            autoAlpha: 0,
-        }, {
-            y: 0,
-            autoAlpha: 1,
+            opacity: 0,
             duration: 0.8,
         }, '-=0.6')
-        .fromTo(sections, {
+        .from(sections, {
             y: 60,
-            autoAlpha: 0,
-        }, {
-            y: 0,
-            autoAlpha: 1,
+            opacity: 0,
             duration: 0.9,
             stagger: 0.12,
         }, '-=0.4');
