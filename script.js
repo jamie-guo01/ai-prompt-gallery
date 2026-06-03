@@ -175,11 +175,28 @@ function renderHome() {
         <div class="home-sections">
     `;
 
+    // Define homepage display order (only these subcategories shown on home)
+    const homeSubOrder = [
+        '3D海报', 'KV海报', 'Banner', '弹窗', '字体设计',
+        'App图标', '空状态', '引导页', '拼贴海报', '渐变艺术',
+        '科技海报', '电影海报', '艺术海报', '复古海报', '多巴胺',
+        '黏土', '夸张', '扁平', '卡通IP', '吉祥物'
+    ];
+
+    // Build a flat lookup of all subcategories with their parent category
+    const allSubs = [];
     categoriesData.forEach(cat => {
         cat.subcategories.forEach(sub => {
-            if (sub.items.length === 0) return;
+            allSubs.push({ sub, cat });
+        });
+    });
 
-            html += `
+    homeSubOrder.forEach(name => {
+        const found = allSubs.find(s => s.sub.name === name);
+        if (!found || found.sub.items.length === 0) return;
+        const { sub, cat } = found;
+
+        html += `
                 <section class="home-section">
                     <header class="home-section-head">
                         <h2>${sub.name}</h2>
@@ -188,13 +205,12 @@ function renderHome() {
                     <div class="home-section-row">
             `;
 
-            // Show first 5 items (matching reference site)
-            sub.items.slice(0, 5).forEach(item => {
-                html += renderCard(item);
-            });
-
-            html += `</div></section>`;
+        // Show first 5 items (matching reference site)
+        sub.items.slice(0, 5).forEach(item => {
+            html += renderCard(item);
         });
+
+        html += `</div></section>`;
     });
 
     html += `</div>`;
